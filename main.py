@@ -56,12 +56,12 @@ class modelNeural(object):
         Z2 = self.W2.dot(A1) + self.b2
         temp_ = Z2.T
         
-        Z2 = np.vstack((self.softmax(temp_[0]), self.softmax(temp_[1])))
-        for i in range(temp_.shape[1] - 2):
-            Z2 = np.vstack((Z2, self.softmax(temp_[i + 2])))
-        Z2 = Z2.T
+        A2 = np.hstack((self.softmax(temp_[0].reshape(2,1)), self.softmax(temp_[1].reshape(2,1))))
+        for i in range(temp_.shape[0] - 2):
+            A2 = np.hstack((A2, self.softmax(temp_[i + 2].reshape(2,1))))
+        A2 = A2.T
         
-        return Z2
+        return A2
     
     def predict_unit(self, x):
         Z1 = self.W1.dot(x.reshape(5, 1)) + self.b1
@@ -153,5 +153,16 @@ class modelNeural(object):
         if save:
             plt.savefig("./error.png")
             print("file has been saved as error.png")
+        
+    def _reset_error(self):
+        self.commulative_errors = []
 
+# to generate the readme.txt
 modelNeural()._info()
+
+
+# for testing only
+# X = np.random.rand(10, 5) # ada 10 data
+# Y = np.random.rand(10, 2)
+
+# modelNeural().predict(X)
